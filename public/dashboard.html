@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LRDLR - Dashboard</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Public+Sans:wght@400;500;600;700&display=swap"
+    rel="stylesheet"
+  />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="shell">
+    <aside class="board">
+      <a class="brand" href="index.html">
+        <span class="brand-name">LRDLR</span>
+        <span class="brand-sub">Lead Router for Dealers</span>
+      </a>
+      <nav class="board-nav">
+        <a href="index.html">New lead</a>
+        <a href="dashboard.html" aria-current="page">Dashboard</a>
+      </nav>
+      <p class="board-note">Demo project. All dealers, customers and phone numbers are fictional.</p>
+    </aside>
+
+    <main class="page page-wide">
+      <header class="page-head">
+        <h1>Dashboard</h1>
+        <p class="muted">Updates live. A status change saves as soon as you pick it.</p>
+      </header>
+
+      <section aria-labelledby="status-title">
+        <h2 id="status-title" class="section-title">Leads by status</h2>
+        <div class="status-row" id="status-stats"></div>
+      </section>
+
+      <section class="panel" aria-labelledby="dealer-title">
+        <h2 id="dealer-title" class="section-title">Leads by dealer</h2>
+        <ul class="dealer-bars" id="dealer-stats"></ul>
+      </section>
+
+      <section class="panel" aria-labelledby="leads-title">
+        <div class="table-head">
+          <h2 id="leads-title" class="section-title">All leads</h2>
+          <div class="filters">
+            <select id="filter-dealer" aria-label="Filter by dealer">
+              <option value="">All dealers</option>
+            </select>
+            <select id="filter-status" aria-label="Filter by status">
+              <option value="">All statuses</option>
+              <option>New</option>
+              <option>Contacted</option>
+              <option>Converted</option>
+              <option>Lost</option>
+            </select>
+            <select id="filter-repeat" aria-label="Show repeat enquiries">
+              <option value="">All leads</option>
+              <option value="repeat">Repeat enquiries only</option>
+            </select>
+          </div>
+        </div>
+        <div class="table-wrap">
+          <table id="leads-table">
+            <thead>
+              <tr>
+                <th>Customer</th>
+                <th>Phone</th>
+                <th>Pincode</th>
+                <th>Product</th>
+                <th>Dealer</th>
+                <th>Source</th>
+                <th>Date</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody id="leads-tbody">
+              <tr><td colspan="8" class="muted">Loading…</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script type="module" src="dashboard.js"></script>
+</body>
+</html>

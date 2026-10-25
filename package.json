@@ -1,0 +1,16 @@
+{
+  "name": "lrdlr",
+  "version": "1.0.0",
+  "description": "LRDLR - Lead Router for Dealers: routes customer leads to dealers by pincode, with a legacy-data cleanup and import script.",
+  "private": true,
+  "scripts": {
+    "clean-and-import": "node scripts/clean-and-import.js",
+    "dry-run": "node scripts/clean-and-import.js --dry-run",
+    "serve": "npx http-server public -c-1 -o"
+  },
+  "dependencies": {
+    "csv-parse": "^5.5.6",
+    "csv-stringify": "^6.5.1",
+    "firebase-admin": "^12.5.0"
+  }
+}

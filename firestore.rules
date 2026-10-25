@@ -1,0 +1,59 @@
+rules_version = '2';
+
+// Firestore Security Rules - plain-language summary
+//
+// - dealers: anyone can READ (the public form needs them to route a lead),
+//   nobody can WRITE from the browser. Only the import script writes them,
+//   using the Admin SDK, and Admin SDK writes bypass these rules.
+// - leads: anyone can CREATE a lead (public form, no login), but only if it
+//   has exactly the fields the form sends, with valid values. Extra fields
+//   are refused (hasOnly), not just missing ones (hasAll).
+// - leads: anyone can READ and change ONLY the status field (the dashboard
+//   needs this; there is no login in this demo). In a real deployment the
+//   dashboard would sit behind Firebase Auth.
+// - Nobody can DELETE a lead from the browser.
+
+function isValidLead(data) {
+  return data.keys().hasAll(
+           ['name', 'phone', 'pincode', 'product', 'source', 'status',
+            'dealer_id', 'dealer_name', 'origin', 'is_repeat', 'repeat_of',
+            'enquiry_number', 'created_on'])
+    && data.keys().hasOnly(
+           ['name', 'phone', 'pincode', 'product', 'source', 'status',
+            'dealer_id', 'dealer_name', 'origin', 'is_repeat', 'repeat_of',
+            'enquiry_number', 'created_on'])
+    && data.name is string && data.name.size() > 0 && data.name.size() <= 100
+    && data.phone is string && data.phone.matches('^[6-9][0-9]{9}$')
+    && data.pincode is string && data.pincode.matches('^[0-9]{6}$')
+    && data.product in ['Home Battery 3kWh', 'Home Battery 5kWh', 'Commercial Battery 10kWh']
+    && data.source in ['Website', 'Voice Agent', 'WhatsApp', 'Dealer Walk-in']
+    && data.status == 'New'
+    && data.dealer_id is string && data.dealer_name is string
+    && data.origin == 'web'
+    && data.is_repeat is bool
+    && (data.repeat_of == null || data.repeat_of is string)
+    && data.enquiry_number is int && data.enquiry_number >= 1
+    && data.created_on == request.time;
+}
+
+function isStatusOnlyUpdate() {
+  return request.resource.data.diff(resource.data).affectedKeys().hasOnly(['status'])
+    && request.resource.data.status in ['New', 'Contacted', 'Converted', 'Lost'];
+}
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    match /dealers/{dealerId} {
+      allow read: if true;
+      allow write: if false; // only the Admin SDK import script may write
+    }
+
+    match /leads/{leadId} {
+      allow read: if true;
+      allow create: if isValidLead(request.resource.data);
+      allow update: if isStatusOnlyUpdate();
+      allow delete: if false;
+    }
+  }
+}

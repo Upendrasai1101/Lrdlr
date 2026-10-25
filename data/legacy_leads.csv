@@ -1,0 +1,41 @@
+lead_id,name,phone,pincode,product,source,created_on,status
+L1001,Apple A,9000010001,560034,Home Battery 5kWh,Website,2026-09-03,New
+L1002,Banana B,9000010002,570017,Home Battery 3kWh,Voice Agent,2026-09-02,New
+L1003,Cherry C,9000010003,575001,Home Battery 3kWh,Voice Agent,2026-09-03,Lost
+L1004,Dates D,90000 10 004,560068,Commercial Battery 10kWh,Website,2026-09-08,New
+L1005,Fig F,9000010005,570017,Home Battery 5kWh,Website,2026-09-08,New
+L1006,Guava G,+91-9000010006,560068,Home Battery 3kWh,Dealer Walk-in,2026-09-14,Contacted
+L1007,Grapes G,9000010007,580020,Commercial Battery 10kWh,Dealer Walk-in,2026-09-18,Contacted
+L1008,Jackfruit J,9000010008,570017,Commercial Battery 10kWh,Voice Agent,2026-09-12,New
+L1009,Kiwi K,12345,583101,Home Battery 3kWh,Website,2026-09-20,Contacted
+L1010,Lemon L,9000010010,577201,Commercial Battery 10kWh,WhatsApp,2026-09-25,Converted
+L1011,Lychee L,9000010011,570017,Home Battery 5kWh,Dealer Walk-in,2026-09-10,Contacted
+L1012,Mango M,9000010012,5600,Commercial Battery 10kWh,Voice Agent,2026-09-03,Converted
+L1013,Melon M,9000010013,571130,Home Battery 5kWh,WhatsApp,2026-09-10,New
+L1014,Orange O,9000010014,575003,Home Battery 5kWh,Voice Agent,2026-09-25,Converted
+L1015,Papaya P,9000010015,400001,Home Battery 5kWh,Website,2026-09-22,New
+L1016,Peach P,9000010016,575003,Commercial Battery 10kWh,Dealer Walk-in,2026-09-11,Converted
+L1017,Pear P,9000010017,571130,Commercial Battery 10kWh,WhatsApp,2026-09-03,New
+L1018,Pineapple P,9000010018,571130,Commercial Battery 10kWh,Website,31/09/2026,Converted
+L1019,Plum P,9000010019,570017,Commercial Battery 10kWh,WhatsApp,2026-09-10,Lost
+L1020,Pomegranate P,9000010020,583104,Home Battery 3kWh,WhatsApp,2026-09-12,converted
+L1021,Sapota S,9000010021,580020,Home Battery 5kWh,Website,2026-09-07,Converted
+L1022,Strawberry S,9000010022,583101,Home Battery 3kWh,WhatsApp,2026-09-13,Lost
+L1023,Watermelon W,9000010023,560034,home battery 5 kwh,WhatsApp,2026-09-18,Converted
+L1024,Custard Apple C,9000010024,560068,Home Battery 5kWh,Dealer Walk-in,2026-09-23,Lost
+L1025,Amla A,9000010025,577201,Home Battery 5kWh,Voice Agent,2026-09-05,New
+L1026,,9000010026,560034,Home Battery 3kWh,Voice Agent,2026-09-01,Lost
+L1027,Apricot A,9000010027,570017,Home Battery 3kWh,Dealer Walk-in,2026-09-10,New
+L1028,Avocado A,9000010028,575001,Commercial Battery 10kWh,website,2026-09-20,Converted
+L1029,Blueberry B,9000010029,583101,Commercial Battery 10kWh,Website,2026-09-15,Lost
+L1030,Coconut C,9000010030,575001,Home Battery 5kWh,Website,2026-09-16,Lost
+L1031,Cranberry C,9000010031,560001,Home Battery 3kWh,Voice Agent,2026-09-15,Contacted
+L1032,Dragon Fruit D,9000010032,583104,Commercial Battery 10kWh,Website,2026-09-04,New
+L1033,Gooseberry G,9000010033,560034,Commercial Battery 10kWh,Website,2026-09-12,New
+L1034,Jamun J,9000010034,560068,Home Battery 3kWh,WhatsApp,2026-09-05,Converted
+L1035,Mulberry M,9000010035,570017,Home Battery 5kWh,WhatsApp,2026-09-04,New
+L1036,Cherry C,9000010003,575001,Home Battery 3kWh,Voice Agent,2026-09-28,Lost
+L1037,Lemon L,+91 9000010010,577201,Commercial Battery 10kWh,WhatsApp,2026-09-25,Converted
+L1038,CRANBERRY C,9000010031,560001,Home Battery 3kWh,Voice Agent,2026-09-15,Contacted
+L1039,Grapes G,9000010007,580020,Commercial Battery 10kWh,Dealer Walk-in,2026-09-18,Contacted
+L1033,Melon M,9000010013,571130,Home Battery 5kWh,WhatsApp,2026-09-10,New

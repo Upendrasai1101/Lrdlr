@@ -1,0 +1,7 @@
+dealer_id,dealer_name,city,pincode_prefixes,contact_email
+D01,Tomato Power Hub,Bengaluru,560,d01@example.com
+D02,Brinjal Energy,Mysuru,570|571,d02@example.com
+D03,Carrot Cell Traders,Mangaluru,575,d03@example.com
+D04,Cabbage Battery Mart,Hubballi,580,d04@example.com
+D05,Potato Energy Store,Ballari,583,d05@example.com
+D06,Onion Power Point,Shivamogga,577,d06@example.com
