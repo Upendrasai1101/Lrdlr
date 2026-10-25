@@ -1,94 +1,155 @@
-# LRDLR — Lead Router for Dealers
+<p align="center">
+  <img src="banner.svg" alt="LRDLR: typing a pincode routes the lead to the matching dealer stall" width="100%" />
+</p>
 
-A lead-capture web app that routes every customer lead to the dealer who covers its pincode, plus a Node.js script that cleans a messy legacy CSV export and imports it into the same Firestore database.
+<p align="center">
+  <a href="https://lrdlr-demo.web.app"><img alt="Live demo" src="https://img.shields.io/badge/Live_demo-lrdlr--demo.web.app-EAA922?style=for-the-badge&logo=firebase&logoColor=black" /></a>
+</p>
 
-> **Demo project.** Every dealer, customer and phone number in this repo is fictional. Cities and pincode prefixes are real geography, used only so the routing rule has realistic input.
+<p align="center">
+  <img alt="Firebase Hosting" src="https://img.shields.io/badge/Firebase-Hosting-FFCA28?style=flat-square&logo=firebase&logoColor=black" />
+  <img alt="Cloud Firestore" src="https://img.shields.io/badge/Cloud-Firestore-4285F4?style=flat-square&logo=googlecloud&logoColor=white" />
+  <img alt="JavaScript" src="https://img.shields.io/badge/JavaScript-No_build_step-F7DF1E?style=flat-square&logo=javascript&logoColor=black" />
+  <img alt="Node.js" src="https://img.shields.io/badge/Node.js-Import_script-339933?style=flat-square&logo=nodedotjs&logoColor=white" />
+</p>
 
-**Built with:** HTML, CSS and JavaScript (no build step) · Firebase Firestore · Firebase Hosting · Node.js (import script)
+<p align="center">
+  Routes every customer lead to the dealer who covers its pincode,<br />
+  and cleans a messy legacy CSV into the same live database.
+</p>
 
-## What it does
+<p align="center">
+  <a href="#-what-it-does">What it does</a> ·
+  <a href="#-how-a-lead-flows">How a lead flows</a> ·
+  <a href="#-run-it-yourself">Run it</a> ·
+  <a href="#-cleaning-the-legacy-csv">Data cleanup</a> ·
+  <a href="#-security">Security</a>
+</p>
 
-| Part | What it does |
-|---|---|
-| **Lead form** (`index.html`) | Validates name, mobile, pincode, product and source. Assigns the dealer from the pincode. A mobile number that already exists is saved again and flagged as a repeat enquiry, never blocked. |
-| **Dashboard** (`dashboard.html`) | Live counts by status and by dealer, filters, a repeat-enquiry badge, and an inline status editor (New → Contacted → Converted / Lost). |
-| **Cleanup + import** (`scripts/clean-and-import.js`) | Reads `data/legacy_leads.csv` (40 rows), fixes what is safe to fix, rejects what isn't, writes `reports/reconciliation.csv` with one line per decision, then imports dealers and leads into Firestore. |
+---
 
-## Project layout
+> [!NOTE]
+> **Everything here is fictional.** Dealers are named after vegetables 🥕, customers after fruits 🍎, and phone numbers follow an obvious `90000 1xxxx` pattern. Cities and pincode prefixes are real geography so the routing rule has realistic input.
 
+## 🥬 What it does
+
+| | Part | What it does |
+|---|---|---|
+| 📝 | **New lead** (`index.html`) | Validates name, mobile, pincode, product and source. As you type the pincode, the matching **dealer stall lights up** before you save. A number that already exists is saved again and flagged as a repeat enquiry, never blocked. |
+| 📊 | **Dashboard** (`dashboard.html`) | Live counts by status, a bar per dealer, filters, repeat badges, and a colour-coded status picker (New → Contacted → Converted / Lost). Updates in real time across open tabs. |
+| 🧹 | **Cleanup + import** (`scripts/clean-and-import.js`) | Reads 40 legacy rows, fixes what is safe to fix, rejects what isn't, writes one line per decision to `reports/reconciliation.csv`, then imports dealers and leads into Firestore. |
+
+## 🧭 How a lead flows
+
+```mermaid
+flowchart LR
+    A[Customer details] --> B{Valid name,<br/>phone, pincode?}
+    B -- no --> X[Show the error<br/>on the field]
+    B -- yes --> C{Same phone<br/>already saved?}
+    C -- yes --> D[Flag as repeat<br/>enquiry]
+    C -- no --> E[First enquiry]
+    D --> F{First 3 digits<br/>match a dealer?}
+    E --> F
+    F -- yes --> G[🥕 That dealer's stall]
+    F -- no --> H[🏠 In-house Sales]
+    G --> I[(Firestore)]
+    H --> I
+    I --> J[Live dashboard]
 ```
-public/                  The web app (deployed to Firebase Hosting)
-  index.html             New Lead form
-  dashboard.html         Dashboard
-  firebase-init.js       Firebase web config (not secret)
-  app.js                 Form validation and save logic
-  dashboard.js           Live lead list and status updates
-  dealer-assign.js       Pincode -> dealer rule
-  validate.js            Phone, pincode and name checks
-  style.css
-scripts/
-  clean-and-import.js    Cleans and imports the legacy CSV
-data/
-  dealers.csv            6 fictional dealers
-  legacy_leads.csv       40 fictional legacy leads with planted data problems
-firestore.rules          Security rules
-firebase.json, .firebaserc
-```
 
-## How to run it
+| Pincode | Prefix | Goes to |
+|---|---|---|
+| 560034 | 560 | 🍅 Tomato Power Hub |
+| 571130 | 571 | 🍆 Brinjal Energy |
+| 575001 | 575 | 🥕 Carrot Cell Traders |
+| 400001 | 400 | 🏠 No dealer covers it → In-house Sales |
 
-1. Install Node.js 18+, then `npm install`.
-2. Put your web app config in `public/firebase-init.js` (Firebase console → Project settings → Your apps).
-3. Check your project ID in `.firebaserc`.
-4. Test the cleanup without touching the database: `npm run dry-run`
-5. Import for real: download a service account key (Project settings → Service accounts → Generate new private key), save it as `service-account-key.json` in the project root (it is git-ignored), then `npm run clean-and-import`. Delete the key from the Google Cloud console when you are done.
-6. Run locally: `npm run serve`
-7. Deploy: `npx firebase-tools deploy --only hosting,firestore:rules`
+> [!TIP]
+> The live preview on the form calls the **same** `assignDealer()` function the save uses, so what you see before saving can never disagree with where the lead actually goes.
+
+## 🚀 Run it yourself
+
+1. Install Node.js 18+, then:
+   ```bash
+   npm install
+   ```
+2. Put your web app config in `public/firebase-init.js` (Firebase console → Project settings → Your apps) and your project ID in `.firebaserc`.
+3. Try the cleanup without touching any database:
+   ```bash
+   npm run dry-run
+   ```
+4. Import for real: Project settings → Service accounts → **Generate new private key**, save it as `service-account-key.json` in the project root, then:
+   ```bash
+   npm run clean-and-import
+   ```
+5. Run locally and deploy:
+   ```bash
+   npm run serve
+   npx firebase-tools deploy --only hosting,firestore:rules
+   ```
+
+> [!IMPORTANT]
+> `service-account-key.json` is a password for your whole database. It is git-ignored — never commit it, and revoke it in the Google Cloud console when you are done.
 
 Re-running the import is safe: leads already in Firestore are left untouched, so a status changed on the dashboard is never reset.
 
-## How dealer assignment works
+## 🧹 Cleaning the legacy CSV
 
-The first 3 digits of the pincode are matched against each dealer's `pincode_prefixes`. No match → **In-house Sales**.
+Every problem below is planted in `data/legacy_leads.csv` on purpose.
 
-| Pincode | Prefix | Dealer |
+| Problem | Example | What happens |
 |---|---|---|
-| 560034 | 560 | Tomato Power Hub |
-| 571130 | 571 | Brinjal Energy |
-| 575001 | 575 | Carrot Cell Traders |
-| 400001 | 400 | no dealer → In-house Sales |
+| Messy phone formats | `90000 10 004`, `+91-9000010006` | 🟡 Fixed to 10 digits |
+| Invalid phone | `12345` | 🔴 Rejected |
+| 4-digit pincode | `5600` | 🔴 Rejected — guessing digits could send the lead to the wrong dealer |
+| Missing name | blank | 🔴 Rejected |
+| Impossible date | `31/09/2026` | 🟡 Fixed to `2026-09-30`, and the change is logged |
+| Casing and spaces | `converted `, `website` | 🟡 Fixed to `Converted`, `Website` |
+| No dealer for pincode | `400001` | 🟣 Routed to In-house Sales |
+| Same phone again | 🍒 Cherry C twice | 🔵 Kept as its own lead, flagged with `repeat_of` |
+| Reused lead ID | `L1033` used twice | 🔵 Second one saved as `L1033-DUP`, flagged as a repeat |
 
-The rule exists twice on purpose — `public/dealer-assign.js` (browser) and inside `scripts/clean-and-import.js` (Node) — because there is no shared build step. Change both together.
-
-## Data problems in legacy_leads.csv
-
-| Problem | Example | Handling |
-|---|---|---|
-| Messy phone formats | `90000 10 004`, `+91-9000010006` | Fixed → plain 10 digits |
-| Invalid phone | `12345` (L1009) | Rejected |
-| 4-digit pincode | `5600` (L1012) | Rejected — guessing digits could route to the wrong dealer |
-| Missing name | L1026 | Rejected |
-| Impossible date | `31/09/2026` (L1018) | Fixed → `2026-09-30`, logged in the report |
-| Casing / spaces | status `converted `, source `website` | Fixed → `Converted`, `Website` |
-| No dealer for pincode | `400001` (L1015) | Routed to In-house Sales |
-| Same phone, new lead | L1036 = L1003, etc. | Kept, flagged `is_repeat` with `repeat_of` |
-| Reused lead_id | `L1033` appears twice | Second one imported as `L1033-DUP`, flagged as repeat of L1013 |
-
-**Result:**
-
-| Action | Rows |
+| Result | Rows |
 |---|---|
-| imported as-is | 26 |
-| fixed | 5 |
-| in-house | 1 |
-| repeat enquiry | 5 |
-| rejected | 3 |
+| 🟢 Imported as-is | 26 |
+| 🟡 Fixed | 5 |
+| 🟣 In-house | 1 |
+| 🔵 Repeat enquiry | 5 |
+| 🔴 Rejected | 3 |
 
-**37 leads kept, 3 rejected.**
+**37 kept, 3 rejected.**
 
-**Not auto-fixed:** L1023 has product `home battery 5 kwh`. It is probably *Home Battery 5kWh*, but the script fixes formatting, it does not guess intent — the row is imported as written for a human to review.
+> [!WARNING]
+> **One row is left for a human.** 🍉 Watermelon W has the product `home battery 5 kwh`. It is probably *Home Battery 5kWh*, but the script fixes formatting — it does not guess intent. The row is imported exactly as written so someone can review it.
 
-## Security
+## 🔐 Security
+
+- **Dealers** are read-only from the browser. Only the import script (Admin SDK) writes them.
+- **Leads** can be created only with exactly the fields the form sends (`hasOnly`), a valid phone, pincode, product and source, status `New`, and the server's own timestamp. Only `status` can be changed afterwards, and nothing can be deleted.
+- **Dashboard text is HTML-escaped**, so a name like `<img onerror=…>` submitted through the public form shows up as text and never runs.
+- There is no login in this demo. A real deployment would put the dashboard behind Firebase Auth.
+
+## 🗂️ Project layout
+
+```
+public/                  The web app (deployed to Firebase Hosting)
+  index.html             New lead form + dealer stalls
+  dashboard.html         Live dashboard
+  app.js                 Validation, live routing preview, save
+  dashboard.js           Live list, stats, status updates
+  dealer-assign.js       The pincode → dealer rule
+  validate.js            Phone, pincode and name checks
+  produce.js             Fruit and vegetable emoji for the demo names
+  firebase-init.js       Firebase web config (not secret)
+  style.css              Fresh-market theme
+scripts/
+  clean-and-import.js    Cleans and imports the legacy CSV
+data/
+  dealers.csv            6 vegetable dealers
+  legacy_leads.csv       40 fruit customers, with planted data problems
+firestore.rules          Security rules
+banner.svg               The animated banner above
+```
 
 - `dealers`: read-only from the browser.
 - `leads`: create only with exactly the fields the form sends (`hasOnly`), valid phone/pincode/product/source, status `New` and server time; only `status` can be updated; no deletes.
