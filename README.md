@@ -27,6 +27,7 @@
   <a href="#-importing-a-csv-in-the-browser">Import CSV</a> ·
   <a href="#-run-it-yourself">Run it</a> ·
   <a href="#-cleaning-the-legacy-csv">Data cleanup</a> ·
+  <a href="#-docs--tests">Docs & tests</a> ·
   <a href="#-security">Security</a>
 </p>
 
@@ -103,6 +104,13 @@ Try it with [`public/sample-leads.csv`](public/sample-leads.csv) (also downloada
 - **Why status is always New:** the page is public, so trusting a status column would let anyone upload fake "Converted" sales.
 - **Batch writes:** good rows are saved with `writeBatch` (up to 400 per batch, all-or-nothing). If a batch fails, *Try again* continues from where it stopped and never writes a row twice.
 - Unlike the one-off Node script, the browser can only save products and sources the security rules allow, so an unknown product is rejected here rather than imported for review.
+
+## 📘 Docs & tests
+
+- [User guide](docs/USER_GUIDE.md) — one page for the people using the app
+- [Troubleshooting](docs/TROUBLESHOOTING.md) — what each error means and how to fix it
+- `npm test` — 7 checks on the phone, pincode, product and dealer rules (Node's built-in runner, no installs)
+- `cd ai-server && python -m unittest -v` — 10 checks on the AI server with a fake Groq: bad AI values are dropped, only our own products are suggested, other websites are blocked, rate limit works
 
 ## 🚀 Run it yourself
 
