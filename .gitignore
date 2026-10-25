@@ -7,6 +7,9 @@ service-account-key.json
 
 # Dependencies and build output
 node_modules/
+__pycache__/
+*.pyc
+.venv/
 reports/
 
 # Firebase local files
