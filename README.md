@@ -21,6 +21,7 @@
 <p align="center">
   <a href="#-what-it-does">What it does</a> ·
   <a href="#-how-a-lead-flows">How a lead flows</a> ·
+  <a href="#-importing-a-csv-in-the-browser">Import CSV</a> ·
   <a href="#-run-it-yourself">Run it</a> ·
   <a href="#-cleaning-the-legacy-csv">Data cleanup</a> ·
   <a href="#-security">Security</a>
@@ -36,6 +37,7 @@
 | | Part | What it does |
 |---|---|---|
 | 📝 | **New lead** (`index.html`) | Validates name, mobile, pincode, product and source. As you type the pincode, the matching **dealer stall lights up** before you save. A number that already exists is saved again and flagged as a repeat enquiry, never blocked. |
+| 📤 | **Import CSV** (`import.html`) | Upload a CSV of many leads. Every row is checked with the same rules as the form and shown in a preview — ready, fixed, repeat or rejected, each with its reason. Nothing is saved until you confirm, and imported leads always start as **New**. |
 | 📊 | **Dashboard** (`dashboard.html`) | Live counts by status, a bar per dealer, filters, repeat badges, and a colour-coded status picker (New → Contacted → Converted / Lost). Updates in real time across open tabs. |
 | 🧹 | **Cleanup + import** (`scripts/clean-and-import.js`) | Reads 40 legacy rows, fixes what is safe to fix, rejects what isn't, writes one line per decision to `reports/reconciliation.csv`, then imports dealers and leads into Firestore. |
 
@@ -66,6 +68,21 @@ flowchart LR
 
 > [!TIP]
 > The live preview on the form calls the **same** `assignDealer()` function the save uses, so what you see before saving can never disagree with where the lead actually goes.
+
+## 📤 Importing a CSV in the browser
+
+Try it with [`public/sample-leads.csv`](public/sample-leads.csv) (also downloadable from the Import page). It has 13 rows built to hit every case:
+
+| Result | Rows | Example |
+|---|---|---|
+| 🟢 Ready | 6 | 🍓 Raspberry R → 🍅 Tomato Power Hub |
+| 🟡 Fixed | 1 | `+91 90000 20002`, `home battery 5 kwh`, `whatsapp` cleaned up |
+| 🔵 Repeat | 2 | 🍎 Apple A already exists; 🍓 Raspberry R appears twice in the file |
+| 🔴 Rejected | 4 | bad phone, 4-digit pincode, unknown product, missing name |
+
+- **Why status is always New:** the page is public, so trusting a status column would let anyone upload fake "Converted" sales.
+- **Batch writes:** good rows are saved with `writeBatch` (up to 400 per batch, all-or-nothing). If a batch fails, *Try again* continues from where it stopped and never writes a row twice.
+- Unlike the one-off Node script, the browser can only save products and sources the security rules allow, so an unknown product is rejected here rather than imported for review.
 
 ## 🚀 Run it yourself
 
@@ -134,6 +151,9 @@ Every problem below is planted in `data/legacy_leads.csv` on purpose.
 ```
 public/                  The web app (deployed to Firebase Hosting)
   index.html             New lead form + dealer stalls
+  import.html            Import CSV page
+  import.js              Parse, check, preview and batch-import a CSV
+  sample-leads.csv       Test file for the Import page
   dashboard.html         Live dashboard
   app.js                 Validation, live routing preview, save
   dashboard.js           Live list, stats, status updates
@@ -150,8 +170,3 @@ data/
 firestore.rules          Security rules
 banner.svg               The animated banner above
 ```
-
-- `dealers`: read-only from the browser.
-- `leads`: create only with exactly the fields the form sends (`hasOnly`), valid phone/pincode/product/source, status `New` and server time; only `status` can be updated; no deletes.
-- The dashboard text is HTML-escaped, so a malicious name submitted through the public form is shown as text and never runs.
-- No login in this demo — a real deployment would put the dashboard behind Firebase Auth.
