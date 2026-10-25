@@ -6,7 +6,8 @@
   "scripts": {
     "clean-and-import": "node scripts/clean-and-import.js",
     "dry-run": "node scripts/clean-and-import.js --dry-run",
-    "serve": "npx http-server public -c-1 -o"
+    "serve": "npx http-server public -c-1 -o",
+    "test": "node --test tests/rules.test.mjs"
   },
   "dependencies": {
     "csv-parse": "^5.5.6",
