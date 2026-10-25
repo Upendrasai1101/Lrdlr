@@ -11,6 +11,8 @@
   <img alt="Cloud Firestore" src="https://img.shields.io/badge/Cloud-Firestore-4285F4?style=flat-square&logo=googlecloud&logoColor=white" />
   <img alt="JavaScript" src="https://img.shields.io/badge/JavaScript-No_build_step-F7DF1E?style=flat-square&logo=javascript&logoColor=black" />
   <img alt="Node.js" src="https://img.shields.io/badge/Node.js-Import_script-339933?style=flat-square&logo=nodedotjs&logoColor=white" />
+  <img alt="Flask" src="https://img.shields.io/badge/Flask-AI_server-000000?style=flat-square&logo=flask&logoColor=white" />
+  <img alt="Groq" src="https://img.shields.io/badge/Groq-gpt--oss--120b-F55036?style=flat-square" />
 </p>
 
 <p align="center">
@@ -21,6 +23,7 @@
 <p align="center">
   <a href="#-what-it-does">What it does</a> ·
   <a href="#-how-a-lead-flows">How a lead flows</a> ·
+  <a href="#-ai-features">AI features</a> ·
   <a href="#-importing-a-csv-in-the-browser">Import CSV</a> ·
   <a href="#-run-it-yourself">Run it</a> ·
   <a href="#-cleaning-the-legacy-csv">Data cleanup</a> ·
@@ -40,6 +43,23 @@
 | 📤 | **Import CSV** (`import.html`) | Upload a CSV of many leads. Every row is checked with the same rules as the form and shown in a preview — ready, fixed, repeat or rejected, each with its reason. Nothing is saved until you confirm, and imported leads always start as **New**. |
 | 📊 | **Dashboard** (`dashboard.html`) | Live counts by status, a bar per dealer, filters, repeat badges, and a colour-coded status picker (New → Contacted → Converted / Lost). Updates in real time across open tabs. |
 | 🧹 | **Cleanup + import** (`scripts/clean-and-import.js`) | Reads 40 legacy rows, fixes what is safe to fix, rejects what isn't, writes one line per decision to `reports/reconciliation.csv`, then imports dealers and leads into Firestore. |
+
+## ✨ AI features
+
+Three small AI helpers, all running on a separate Flask server (`ai-server/`, hosted on Render) that holds the Groq key. **The AI only suggests — a person always confirms**, and every value it returns is checked again in Python, in the browser and by the Firestore rules.
+
+| | Feature | Where | What it does |
+|---|---|---|---|
+| ✨ | **Smart paste** | New lead | Paste a messy WhatsApp-style message (English, Telugu, Hindi or Kannada in English letters). The AI fills name, phone, pincode, product and source; anything it isn't sure of stays empty. Filled boxes turn yellow until you edit them, and you still press **Save**. |
+| 📊 | **AI briefing** | Dashboard | A 3–4 sentence summary and one next step. Only **counts** are sent — never names or phone numbers. Rankings are calculated in code, not by the AI. |
+| 🔧 | **Import fix** | Import CSV | For rows rejected for an unknown product or source, **Ask AI** maps a typo to one of our own values (`home batery 5` → *Home Battery 5kWh*). It returns nothing for things we don't sell or can't tell apart, and a person clicks **Use it**. |
+
+**Things testing caught and fixed**
+- A second Smart paste could mix two customers' details → untouched AI values are cleared before each new fill.
+- The briefing suggested moving leads to dealers in other cities → the business rules (dealers serve fixed areas) are now in the prompt.
+- The briefing called the 2nd-busiest dealer "the highest" → dealers are ranked in code before the AI sees them.
+
+**AI server safety:** key only in environment variables · CORS limited to the app's own sites · 20 requests/min per IP · 1000-character input limit · prompts treat user text as data, not instructions.
 
 ## 🧭 How a lead flows
 
@@ -104,6 +124,14 @@ Try it with [`public/sample-leads.csv`](public/sample-leads.csv) (also downloada
    npm run serve
    npx firebase-tools deploy --only hosting,firestore:rules
    ```
+6. AI server (optional — the app works without it):
+   ```bash
+   cd ai-server
+   cp .env.example .env        # then put your real GROQ_API_KEY in .env
+   pip install -r requirements.txt
+   python app.py               # http://127.0.0.1:5000/health
+   ```
+   On Render: root directory `ai-server`, build `pip install -r requirements.txt`, start `gunicorn app:app`, and set `GROQ_API_KEY` in Environment. Put the Render URL in `public/ai-config.js`.
 
 > [!IMPORTANT]
 > `service-account-key.json` is a password for your whole database. It is git-ignored — never commit it, and revoke it in the Google Cloud console when you are done.
@@ -160,10 +188,16 @@ public/                  The web app (deployed to Firebase Hosting)
   dealer-assign.js       The pincode → dealer rule
   validate.js            Phone, pincode and name checks
   produce.js             Fruit and vegetable emoji for the demo names
+  ai-config.js           Where the AI server lives (local or Render)
+  sample-typos.csv       Test file for the Import AI fix
   firebase-init.js       Firebase web config (not secret)
   style.css              Fresh-market theme
 scripts/
   clean-and-import.js    Cleans and imports the legacy CSV
+ai-server/               Flask API for the AI features (deployed to Render)
+  app.py                 /health, /extract, /summary, /suggest
+  requirements.txt
+  .env.example           Copy to .env locally; never commit .env
 data/
   dealers.csv            6 vegetable dealers
   legacy_leads.csv       40 fruit customers, with planted data problems
