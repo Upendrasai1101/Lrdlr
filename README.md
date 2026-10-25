@@ -217,3 +217,11 @@ banner.svg               The animated banner above
 Planned, designed, tested and deployed by **Upendrasai**.
 Code written with **Claude Code** (Anthropic) as an AI pair programmer —
 every feature was tested locally and live, and real bugs were caught and fixed along the way.
+
+
+---
+
+<p align="center">
+  Built together by a human and an AI, one "where does this file go?" at a time 🤝<br />
+  <sub>All dealers, customers and batteries in this project are fictional. No real vegetables were harmed. 🥕🔋</sub>
+</p>
