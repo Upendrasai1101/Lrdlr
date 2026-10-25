@@ -212,3 +212,8 @@ data/
 firestore.rules          Security rules
 banner.svg               The animated banner above
 ```
+## 🤝 How it was built
+
+Planned, designed, tested and deployed by **Upendrasai**.
+Code written with **Claude Code** (Anthropic) as an AI pair programmer —
+every feature was tested locally and live, and real bugs were caught and fixed along the way.
