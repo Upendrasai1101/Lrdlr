@@ -1,0 +1,5 @@
+{
+  "type": "module",
+  "private": true,
+  "description": "Tells Node that the browser files in this folder are ES modules, so tests/ can import them. Not deployed (see firebase.json ignore)."
+}
