@@ -1,0 +1,98 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 360" width="1200" height="360" role="img" aria-label="LRDLR: typing pincode 575012 routes the lead to the Carrot Cell Traders stall">
+  <style>
+    .chalk { fill: #f1efe4; font-family: "Segoe UI", Helvetica, Arial, sans-serif; }
+    .dim { fill: #b9c2b4; font-family: "Segoe UI", Helvetica, Arial, sans-serif; }
+    .ink { fill: #1c2420; font-family: "Segoe UI", Helvetica, Arial, sans-serif; }
+    .digit { font-size: 40px; font-weight: 700; opacity: 0; }
+    .stall-name { font-size: 20px; font-weight: 600; }
+    .emoji { font-size: 24px; }
+    .tag-text { font-size: 15px; font-weight: 700; }
+
+    /* one 8s loop: type 575012, then the carrot stall lights up */
+    .d0 { animation: d0 8s infinite; } .d1 { animation: d1 8s infinite; }
+    .d2 { animation: d2 8s infinite; } .d3 { animation: d3 8s infinite; }
+    .d4 { animation: d4 8s infinite; } .d5 { animation: d5 8s infinite; }
+    @keyframes d0 { 0%,7.4%{opacity:0} 7.5%,92%{opacity:1} 93%,100%{opacity:0} }
+    @keyframes d1 { 0%,11.8%{opacity:0} 11.9%,92%{opacity:1} 93%,100%{opacity:0} }
+    @keyframes d2 { 0%,16.2%{opacity:0} 16.3%,92%{opacity:1} 93%,100%{opacity:0} }
+    @keyframes d3 { 0%,20.5%{opacity:0} 20.6%,92%{opacity:1} 93%,100%{opacity:0} }
+    @keyframes d4 { 0%,24.9%{opacity:0} 25%,92%{opacity:1} 93%,100%{opacity:0} }
+    @keyframes d5 { 0%,29.3%{opacity:0} 29.4%,92%{opacity:1} 93%,100%{opacity:0} }
+
+    .lit { opacity: 0; animation: lit 8s infinite; }
+    @keyframes lit { 0%,34%{opacity:0} 38%,90%{opacity:1} 94%,100%{opacity:0} }
+
+    .wire { stroke-dasharray: 260; stroke-dashoffset: 260; animation: wire 8s infinite; }
+    @keyframes wire { 0%,31%{stroke-dashoffset:260; opacity:1} 37%,90%{stroke-dashoffset:0; opacity:1} 94%,100%{stroke-dashoffset:0; opacity:0} }
+
+    .hint { animation: hint 8s infinite; }
+    @keyframes hint { 0%,33%{opacity:1} 36%,92%{opacity:0} 95%,100%{opacity:1} }
+
+    @media (prefers-reduced-motion: reduce) {
+      .digit, .lit { animation: none; opacity: 1; }
+      .wire { animation: none; stroke-dashoffset: 0; }
+      .hint { animation: none; opacity: 0; }
+    }
+  </style>
+
+  <!-- chalkboard with wooden frame -->
+  <rect x="6" y="6" width="1188" height="348" rx="22" fill="#23312b" stroke="#8a6a3e" stroke-width="12"/>
+
+  <!-- left: brand + pincode box -->
+  <text x="70" y="128" class="chalk" font-size="84" font-weight="800" letter-spacing="-1">LRDLR</text>
+  <text x="74" y="168" class="dim" font-size="24">Lead Router for Dealers</text>
+
+  <rect x="70" y="200" width="330" height="70" rx="12" fill="#2e4038" stroke="#b9c2b4" stroke-width="1.5"/>
+  <text x="96" y="249" class="chalk digit d0">5</text>
+  <text x="142" y="249" class="chalk digit d1">7</text>
+  <text x="188" y="249" class="chalk digit d2">5</text>
+  <text x="234" y="249" class="chalk digit d3">0</text>
+  <text x="280" y="249" class="chalk digit d4">1</text>
+  <text x="326" y="249" class="chalk digit d5">2</text>
+
+  <text x="72" y="308" class="dim hint" font-size="18">Type a pincode…</text>
+  <g class="lit">
+    <rect x="70" y="285" width="330" height="40" rx="8" fill="#eaa922"/>
+    <text x="88" y="312" class="ink" font-size="18" font-weight="700">🥕  Goes to Carrot Cell Traders</text>
+  </g>
+
+  <!-- the wire from the box to the matching stall -->
+  <path class="wire" d="M400 235 C 470 235, 480 158, 556 158" fill="none" stroke="#eaa922" stroke-width="3" stroke-linecap="round"/>
+
+  <!-- right: dealer stalls -->
+  <g>
+    <rect x="560" y="32" width="580" height="44" rx="10" fill="#2e4038"/>
+    <text x="580" y="63" class="emoji">🍅</text>
+    <text x="624" y="61" class="chalk stall-name">Tomato Power Hub</text>
+    <rect x="1074" y="42" width="50" height="24" rx="4" fill="#f4ead2"/><text x="1085" y="60" class="ink tag-text">560</text>
+
+    <rect x="560" y="84" width="580" height="44" rx="10" fill="#2e4038"/>
+    <text x="580" y="115" class="emoji">🍆</text>
+    <text x="624" y="113" class="chalk stall-name">Brinjal Energy</text>
+    <rect x="1016" y="94" width="50" height="24" rx="4" fill="#f4ead2"/><text x="1027" y="112" class="ink tag-text">570</text>
+    <rect x="1074" y="94" width="50" height="24" rx="4" fill="#f4ead2"/><text x="1085" y="112" class="ink tag-text">571</text>
+
+    <rect x="560" y="136" width="580" height="44" rx="10" fill="#2e4038"/>
+    <rect class="lit" x="560" y="136" width="580" height="44" rx="10" fill="#eaa922" fill-opacity="0.22" stroke="#eaa922" stroke-width="3"/>
+    <text x="580" y="167" class="emoji">🥕</text>
+    <text x="624" y="165" class="chalk stall-name">Carrot Cell Traders</text>
+    <rect x="1074" y="146" width="50" height="24" rx="4" fill="#f4ead2"/>
+    <rect class="lit" x="1074" y="146" width="50" height="24" rx="4" fill="#eaa922"/>
+    <text x="1085" y="164" class="ink tag-text">575</text>
+
+    <rect x="560" y="184" width="580" height="44" rx="10" fill="#2e4038"/>
+    <text x="580" y="215" class="emoji">🥬</text>
+    <text x="624" y="213" class="chalk stall-name">Cabbage Battery Mart</text>
+    <rect x="1074" y="194" width="50" height="24" rx="4" fill="#f4ead2"/><text x="1085" y="212" class="ink tag-text">580</text>
+
+    <rect x="560" y="232" width="580" height="44" rx="10" fill="#2e4038"/>
+    <text x="580" y="263" class="emoji">🥔</text>
+    <text x="624" y="261" class="chalk stall-name">Potato Energy Store</text>
+    <rect x="1074" y="242" width="50" height="24" rx="4" fill="#f4ead2"/><text x="1085" y="260" class="ink tag-text">583</text>
+
+    <rect x="560" y="280" width="580" height="44" rx="10" fill="#2e4038"/>
+    <text x="580" y="311" class="emoji">🧅</text>
+    <text x="624" y="309" class="chalk stall-name">Onion Power Point</text>
+    <rect x="1074" y="290" width="50" height="24" rx="4" fill="#f4ead2"/><text x="1085" y="308" class="ink tag-text">577</text>
+  </g>
+</svg>
