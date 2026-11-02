@@ -5,8 +5,8 @@ rules_version = '2';
 // - dealers: anyone can READ (the public form needs them to route a lead),
 //   nobody can WRITE from the browser. Only the import script writes them,
 //   using the Admin SDK, and Admin SDK writes bypass these rules.
-// - leads: anyone can CREATE a lead (public form or the CSV import page,
-//   origin 'web' or 'csv_upload'; no login), but only if it
+// - leads: anyone can CREATE a lead (website form 'web', CSV import
+//   'csv_upload' or the phone app 'mobile'; no login), but only if it
 //   has exactly the fields the form sends, with valid values. Extra fields
 //   are refused (hasOnly), not just missing ones (hasAll).
 // - leads: anyone can READ and change ONLY the status field (the dashboard
@@ -30,7 +30,7 @@ function isValidLead(data) {
     && data.source in ['Website', 'Voice Agent', 'WhatsApp', 'Dealer Walk-in']
     && data.status == 'New'
     && data.dealer_id is string && data.dealer_name is string
-    && data.origin in ['web', 'csv_upload']
+    && data.origin in ['web', 'csv_upload', 'mobile']
     && data.is_repeat is bool
     && (data.repeat_of == null || data.repeat_of is string)
     && data.enquiry_number is int && data.enquiry_number >= 1

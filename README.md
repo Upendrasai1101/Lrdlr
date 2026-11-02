@@ -4,6 +4,7 @@
 
 <p align="center">
   <a href="https://lrdlr-demo.web.app"><img alt="Live demo" src="https://img.shields.io/badge/Live_demo-lrdlr--demo.web.app-EAA922?style=for-the-badge&logo=firebase&logoColor=black" /></a>
+  <a href="https://github.com/Upendrasai1101/Lrdlr/releases/latest"><img alt="Download the Android app" src="https://img.shields.io/badge/Android_app-Download_APK-2F7A3D?style=for-the-badge&logo=android&logoColor=white" /></a>
 </p>
 
 <p align="center">
@@ -13,17 +14,20 @@
   <img alt="Node.js" src="https://img.shields.io/badge/Node.js-Import_script-339933?style=flat-square&logo=nodedotjs&logoColor=white" />
   <img alt="Flask" src="https://img.shields.io/badge/Flask-AI_server-000000?style=flat-square&logo=flask&logoColor=white" />
   <img alt="Groq" src="https://img.shields.io/badge/Groq-gpt--oss--120b-F55036?style=flat-square" />
+  <img alt="React Native" src="https://img.shields.io/badge/React_Native-Expo_SDK_58-61DAFB?style=flat-square&logo=react&logoColor=black" />
 </p>
 
 <p align="center">
   Routes every customer lead to the dealer who covers its pincode,<br />
-  and cleans a messy legacy CSV into the same live database.
+  and cleans a messy legacy CSV into the same live database,<br />
+  on the web and in an Android app.
 </p>
 
 <p align="center">
   <a href="#-what-it-does">What it does</a> ·
   <a href="#-how-a-lead-flows">How a lead flows</a> ·
   <a href="#-ai-features">AI features</a> ·
+  <a href="#-mobile-app-android">Mobile app</a> ·
   <a href="#-importing-a-csv-in-the-browser">Import CSV</a> ·
   <a href="#-run-it-yourself">Run it</a> ·
   <a href="#-cleaning-the-legacy-csv">Data cleanup</a> ·
@@ -61,6 +65,40 @@ Three small AI helpers, all running on a separate Flask server (`ai-server/`, ho
 - The briefing called the 2nd-busiest dealer "the highest" → dealers are ranked in code before the AI sees them.
 
 **AI server safety:** key only in environment variables · CORS limited to the app's own sites · 20 requests/min per IP · 1000-character input limit · prompts treat user text as data, not instructions.
+
+## 📱 Mobile app (Android)
+
+The same product in your pocket: a React Native + Expo app in [`mobile/`](mobile) that talks to the **same Firestore database, security rules and AI server** as the website. A lead saved on the phone shows up on the web dashboard instantly, and the other way round.
+
+<p align="center">
+  <img src="mobile/screenshots/1-new-lead-smart-paste.jpg" alt="New lead with Smart paste" width="22%" />
+  <img src="mobile/screenshots/2-import-ai-fix.jpg" alt="Import CSV with AI fix" width="22%" />
+  <img src="mobile/screenshots/3-dashboard-ai-briefing.jpg" alt="Dashboard with AI briefing" width="22%" />
+  <img src="mobile/screenshots/4-lead-detail.jpg" alt="Lead detail with status change" width="22%" />
+</p>
+
+| Tab / screen | What it does |
+|---|---|
+| 📝 **New lead** | Same validation and live dealer preview as the web form. ✨ Smart paste fills the form from a pasted message. Saved with `origin: "mobile"`. |
+| 📤 **Import CSV** | Pick a CSV on the phone (or load the sample from the live site), preview Ready / Fixed / Repeat / Rejected, ✨ Ask AI on rejected rows, batch import. |
+| 📊 **Dashboard** | Live status tiles, leads per dealer, ✨ AI briefing, filters. Tap a lead to open it. |
+| 🔎 **Lead detail** | Routing, repeat history, call button, and a status change that updates the website at once. |
+
+**One rule, two platforms.** The app does not copy the routing logic. [`mobile/metro.config.js`](mobile/metro.config.js) lets it import the website's own [`dealer-assign.js`](public/dealer-assign.js), [`validate.js`](public/validate.js) and [`produce.js`](public/produce.js), so the phone and the web can never route a lead differently.
+
+**Download:** grab the APK from [Releases](https://github.com/Upendrasai1101/Lrdlr/releases/latest) and open it on an Android phone (allow "install unknown apps" once). It is a demo build, not on the Play Store.
+
+<details>
+<summary>Run or build the app yourself</summary>
+
+```bash
+cd mobile
+npm install
+npx expo start                                        # scan the QR with Expo Go
+npx eas-cli@latest build -p android --profile preview # cloud build -> installable APK
+```
+`mobile/src/lib/firebase.js` holds the same web config as `public/firebase-init.js`. The Groq key is **never** in the app: an APK can be unpacked, so the app only calls the Flask server on Render.
+</details>
 
 ## 🧭 How a lead flows
 
@@ -180,6 +218,8 @@ Every problem below is planted in `data/legacy_leads.csv` on purpose.
 - **Dealers** are read-only from the browser. Only the import script (Admin SDK) writes them.
 - **Leads** can be created only with exactly the fields the form sends (`hasOnly`), a valid phone, pincode, product and source, status `New`, and the server's own timestamp. Only `status` can be changed afterwards, and nothing can be deleted.
 - **Dashboard text is HTML-escaped**, so a name like `<img onerror=…>` submitted through the public form shows up as text and never runs.
+- The **mobile app** goes through the same rules: its leads must carry `origin: "mobile"`, which `firestore.rules` lists next to `web` and `csv_upload`.
+- **No secret ships in the APK.** The app holds only the public Firebase web config; the Groq key stays on the AI server.
 - There is no login in this demo. A real deployment would put the dashboard behind Firebase Auth.
 
 ## 🗂️ Project layout
@@ -209,9 +249,16 @@ ai-server/               Flask API for the AI features (deployed to Render)
 data/
   dealers.csv            6 vegetable dealers
   legacy_leads.csv       40 fruit customers, with planted data problems
+mobile/                  React Native + Expo app (Android APK via EAS Build)
+  metro.config.js        Lets the app import the website's rule files
+  src/app/(tabs)/        New lead, Import CSV, Dashboard tabs
+  src/app/lead/[id].jsx  Lead detail + status change
+  src/lib/               Firebase, shared rules, CSV checks, AI calls, theme
+  screenshots/           Phone screenshots used above
 firestore.rules          Security rules
 banner.svg               The animated banner above
 ```
+
 ## 🤝 How it was built
 
 Planned, designed, tested and deployed by **Upendrasai**.

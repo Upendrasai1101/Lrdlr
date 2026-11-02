@@ -21,3 +21,7 @@ firestore-debug.log
 .DS_Store
 Thumbs.db
 .vscode/
+.claude/
+
+# Expo (mobile/) - mobile/.gitignore covers the rest
+.expo/
